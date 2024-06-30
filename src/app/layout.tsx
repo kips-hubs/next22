@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import HeaderLinks from "@/ui/index/header-nav";
 import { inter } from "@/ui/fonts/fonts";
-import SRLogo from "@/ui/logo/SRLogo";
 
 export const metadata: Metadata = {
   title: "Create Next App",

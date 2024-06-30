@@ -4,12 +4,29 @@ import React from 'react';
 import "./globals.css";
 import { lusitana, modern } from '@/ui/fonts/fonts';
 import HeaderMenu from '@/ui/index/Menu';
+import HeaderLinks from '@/ui/index/header-nav';
+import SRLogo from '@/ui/logo/SRLogo';
+import Link from 'next/link';
 
 
 export default function Page() {
   return (
     <div className="flex flex-col px-4 pt-6">
-      <HeaderMenu />
+      <div className="flex shadow-md p-4">
+          <div className="flex items-center">
+            <div className="ml-16 md:block hidden"><SRLogo /></div>
+          </div>
+          <div className="flex-grow flex justify-end items-end py-4 px-12">
+            <nav className="mr-8">
+              <ul className="flex space-x-4">
+                <HeaderLinks />
+              </ul>
+            </nav>
+            <div className="mr-8">
+              <button className="bg-black text-white py-2 px-4 rounded">Log in</button>
+            </div>
+          </div>
+        </div>
       <main className="mt-4 flex flex-col grow gap-4 md:flex-row px-12">
         <section className="flex flex-col justify-center gap-6 p-6 bg-blue-50 md:w-1/2">
           <h1 className={`${lusitana.className} text-4xl font-bold`}>Revolutionize Your Data Security</h1>
@@ -18,7 +35,7 @@ export default function Page() {
           </p>
 
           <div className="flex space-x-4 mb-8">
-            <button className="bg-black text-white py-2 px-6 rounded">Sign Up Now</button>
+            <Link className="bg-black text-white py-2 px-6 rounded" href={'/dashboard'}>Sign Up Now</Link>
             <button className="bg-gray-200 text-black py-2 px-6 rounded">Learn More</button>
           </div>
 
