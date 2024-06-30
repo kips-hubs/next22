@@ -2,12 +2,14 @@
 import Image from 'next/image';
 import React from 'react';
 import "./globals.css";
-import { lusitana, modern } from '@/UI/fonts/fonts';
+import { lusitana, modern } from '@/ui/fonts/fonts';
+import HeaderMenu from '@/ui/index/Menu';
 
 
 export default function Page() {
   return (
     <div className="flex flex-col px-4 pt-6">
+      <HeaderMenu />
       <main className="mt-4 flex flex-col grow gap-4 md:flex-row px-12">
         <section className="flex flex-col justify-center gap-6 p-6 bg-blue-50 md:w-1/2">
           <h1 className={`${lusitana.className} text-4xl font-bold`}>Revolutionize Your Data Security</h1>

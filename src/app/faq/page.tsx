@@ -1,14 +1,13 @@
 import React from 'react';
 import Head from 'next/head';
+import HeaderMenu from '@/ui/index/Menu';
 
 export default function Page() {
   return (
-    <div>
-      <Head>
-        <title>FAQ - SecureRotate</title>
-      </Head>
+    <div className="flex flex-col px-4 pt-6">
+      <HeaderMenu />
       <header className="bg-gray-800 text-white py-4">
-        <h1 className="text-center text-3xl">Frequently Asked Questions</h1>
+        <h1 className="text-center text-3xl">FAQs</h1>
       </header>
       <main className="max-w-4xl mx-auto p-6">
         <section className="mb-8">
@@ -29,6 +28,8 @@ export default function Page() {
         </section>
       </main>
     </div>
+
+      
   );
 };
 

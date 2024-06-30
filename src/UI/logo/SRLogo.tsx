@@ -1,6 +1,6 @@
 import { ShieldCheckIcon } from "@heroicons/react/24/outline";
 
-import { lusitana } from "@/UI/fonts/fonts";
+import { lusitana } from "@/ui/fonts/fonts";
 
 export default function SRLogo(){
     return (
