@@ -23,17 +23,5 @@ SecureRotate is an advanced encryption solution designed to protect your data wi
 - **Automatic Key Rotation**: Ensures keys are rotated continuously to maintain security.
 - **User-Friendly Interface**: Easy-to-use interface for seamless integration.
 - **High-Level Encryption**: Uses the latest encryption standards to protect data.
-- **Free Demo**: Sign up today to experience our technology with a free demo session.
 
-## Installation
 
-To get started with SecureRotate, clone the repository and install the dependencies:
-
-```bash
-git clone https://github.com/KEjonathan/next22.git
-cd next22
-pnpm install
-
-Usage
-To run the application locally:
-pnpm run dev
