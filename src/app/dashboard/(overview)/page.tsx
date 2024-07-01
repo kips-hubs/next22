@@ -1,21 +1,45 @@
-import { lusitana } from "@/ui/fonts/fonts";
-import { CardsSkeleton } from "@/ui/skeletons";
-import { Suspense } from "react";
+'use client'
+import { generateData } from '@/lib/dataGenerator';
+import Card from '@/ui/dashboard/card';
+import { CardsSkeleton } from '@/ui/skeletons';
+import React, { useState, useEffect } from 'react';
 
 
-export default async function Page() {
-  return (
-    <main>
-      <h1 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>
-        Dashboard
-      </h1>
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        <Suspense fallback={<CardsSkeleton />}>
-          <h1>Overview Soon Coming</h1>
-        </Suspense>
-      </div>
-      <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-4 lg:grid-cols-8">
-      </div>
-    </main>
-  );
-}
+const Dashboard: React.FC = () => {
+    const [data, setData] = useState([]);
+    const [loading, setLoading] = useState(true);
+
+    
+    useEffect(() => {
+
+        // Simulate a data fetching process
+        setTimeout(() => {
+
+            const fetchedData = generateData(6); // Generate 6 items
+            setData(fetchedData);
+            setLoading(false);
+        }, 2000); // Simulate a 2-second loading time
+    }, []);
+
+    return (
+        <div className="container mx-auto p-6">
+            <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
+            {loading ? (
+                <CardsSkeleton />
+            ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {data.map((item, index) => (
+                        <Card
+                            key={index}
+                            title={item.title}
+                            description={item.description}
+                            date={item.date}
+                        />
+                    ))}
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default Dashboard;
