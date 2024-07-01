@@ -20,7 +20,7 @@ export default function HeaderLinks() {
                         <Link key={link.name}
                             href={link.href}
                             className={clsx('hover-underline',
-                                { 'text-blue-500 bg-red-600': pathname === link.href }
+                                { 'text-blue-500': pathname === link.href }
                             )} >
                             {link.name}
                         </Link>
