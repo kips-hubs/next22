@@ -7,7 +7,7 @@ export default function SRLogo(){
         <div className={`${lusitana.className} 
         flex flex-row items-center leading-none text-black md:flex`}>
             <ShieldCheckIcon className="h-12 w-12" />
-            <p className="text-[44px] ">
+            <p className="text-[38px]">
                 SecureRotate
             </p>
         </div>
