@@ -1,91 +1,70 @@
-import NextAuth, { NextAuthOptions, User as NextAuthUser } from 'next-auth';
+import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import pool from '@/lib/db';
+import pool from '@/lib/db'; // Adjust import path if needed
 import bcrypt from 'bcryptjs';
-import { RowDataPacket } from 'mysql2/promise';
 
-// Define the user type for the application
-interface User {
-    id: string;
-    username: string;
-    password: string;
-    email?: string; // Adjust based on your schema
-}
+export default NextAuth({
+  providers: [
+    CredentialsProvider({
+      name: 'Credentials',
+      credentials: {
+        username: { label: 'Username', type: 'text' },
+        password: { label: 'Password', type: 'password' },
+      },
+      async authorize(credentials) {
+        if (!credentials) {
+          throw new Error('No credentials provided');
+        }
 
-// Define the user type returned from the `authorize` function
-interface CustomUser extends NextAuthUser {
-    id: string;
-    name: string;
-}
+        const { username, password } = credentials;
 
-const authOptions: NextAuthOptions = {
-    providers: [
-        CredentialsProvider({
-            name: 'Credentials',
-            credentials: {
-                username: { label: 'Username', type: 'text' },
-                password: { label: 'Password', type: 'password' },
-            },
-            async authorize(credentials) {
-                if (!credentials) {
-                    throw new Error('No credentials provided');
-                }
+        try {
+          const [rows] = await pool.query('SELECT * FROM users WHERE username = ?', [username]);
+          const user = (rows as any)[0]; // Casting to any here to handle typing
 
-                const { username, password } = credentials;
+          if (!user) {
+            throw new Error('No user found');
+          }
 
-                try {
-                    // Execute the query
-                    const [rows] = await pool.query<RowDataPacket[]>('SELECT * FROM users WHERE username = ?', [username]);
+          const isMatch = await bcrypt.compare(password, user.password);
 
-                    // Assert that rows are of type User[]
-                    const users = rows as User[];
-
-                    const user = users[0];
-
-                    if (!user) {
-                        throw new Error('No user found');
-                    }
-
-                    // Compare password
-                    const isMatch = await bcrypt.compare(password, user.password);
-
-                    if (isMatch) {
-                        return { id: user.id, name: user.username } as CustomUser;
-                    } else {
-                        throw new Error('Invalid password');
-                    }
-                } catch (error) {
-                    console.error('Error during authorization:', error);
-                    throw new Error('Authentication failed');
-                }
-            },
-        }),
-    ],
-    pages: {
-        signIn: '/auth/signin',
-        error: '/auth/error',
+          if (isMatch) {
+            return { id: user.id, name: user.username, email: user.email } as { id: string; name: string; email?: string };
+          } else {
+            throw new Error('Invalid password');
+          }
+        } catch (error) {
+          console.error('Error during authorization:', error);
+          throw new Error('Authentication failed');
+        }
+      },
+    }),
+  ],
+  pages: {
+    signIn: '/auth/signin',
+    error: '/auth/error',
+  },
+  session: {
+    strategy: 'jwt',
+  },
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.name = user.name;
+        token.email = user.email; 
+      }
+      return token;
     },
-    session: {
-        strategy: 'jwt',
+    async session({ session, token }) {
+      if (token) {
+        session.user = {
+          id: token.id as string,
+          name: token.name as string,
+          email: token.email as string, 
+        };
+      }
+      return session;
     },
-    callbacks: {
-        async jwt({ token, user }) {
-            if (user) {
-                token.id = (user as CustomUser).id;
-                token.name = (user as CustomUser).name;
-            }
-            return token;
-        },
-        async session({ session, token }) {
-            if (token) {
-                session.user = {
-                    id: token.id as string,
-                    name: token.name as string,
-                };
-            }
-            return session;
-        },
-    },
-};
-
-export default NextAuth(authOptions);
+  },
+});
