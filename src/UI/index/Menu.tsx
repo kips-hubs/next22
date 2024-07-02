@@ -1,3 +1,4 @@
+import Link from "next/link";
 import SRLogo from "../logo/SRLogo";
 import HeaderLinks from "./header-nav";
 
@@ -14,7 +15,7 @@ export default function HeaderMenu(){
               </ul>
             </nav>
             <div className="mr-8">
-              <button className="bg-black text-white py-2 px-4 rounded">Log in</button>
+            <Link className="bg-black text-white py-2 px-4 rounded" href={'/auth/signin'}>Log in</Link>
             </div>
           </div>
         </div>

@@ -24,8 +24,8 @@ export default function Page() {
               </ul>
             </nav>
             <div className="mr-8">
-              <button className="bg-black text-white py-2 px-4 rounded">Log in</button>
-            </div>
+              <Link className="bg-black text-white py-2 px-4 rounded" href={'/auth/signin'}>Log in</Link>
+            </div> 
           </div>
         </div>
 
@@ -38,7 +38,7 @@ export default function Page() {
             </p>
 
             <div className="flex space-x-4 mb-8">
-              <Link className="bg-black text-white py-2 px-6 rounded" href={'/dashboard'}>Sign Up Now</Link>
+              <Link className="bg-black text-white py-2 px-6 rounded" href={'/auth/register'}>Sign Up</Link>
               <button className="bg-gray-200 text-black py-2 px-6 rounded">Learn More</button>
             </div>
 
