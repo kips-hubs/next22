@@ -1,6 +1,6 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import pool from '@/lib/db'; // Adjust import path if needed
+import pool from '@/lib/db'; // Adjust the import path if needed
 import bcrypt from 'bcryptjs';
 
 export default NextAuth({
@@ -42,7 +42,7 @@ export default NextAuth({
   ],
   pages: {
     signIn: '/auth/signin',
-    error: '/auth/error',
+    error: '/auth/error', // Custom error page
   },
   session: {
     strategy: 'jwt',
@@ -52,7 +52,7 @@ export default NextAuth({
       if (user) {
         token.id = user.id;
         token.name = user.name;
-        token.email = user.email; 
+        token.email = user.email; // Add email if necessary
       }
       return token;
     },
@@ -61,7 +61,7 @@ export default NextAuth({
         session.user = {
           id: token.id as string,
           name: token.name as string,
-          email: token.email as string, 
+          email: token.email as string, // Add email if necessary
         };
       }
       return session;
