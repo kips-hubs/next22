@@ -39,14 +39,14 @@ export default function Page() {
 
             <div className="flex space-x-4 mb-8">
               <Link className="bg-black text-white py-2 px-6 rounded" href={'/auth/register'}>Sign Up</Link>
-              <button className="bg-gray-200 text-black py-2 px-6 rounded">Learn More</button>
+              <Link className="bg-gray-200 text-black py-2 px-6 rounded" href={'/dashboard'}>Learn More</Link>
             </div>
 
             <div className="flex flex-wrap justify-center items-center space-x-6">
-              <Image src="/members/emma.png" alt="Member 1" width={48} height={48} className="h-12 w-12 rounded-3xl" />
-              <Image src="/members/dan.png" alt="Member 2" width={48} height={48} className="h-12 w-12 rounded-3xl" />
-              <Image src="/members/quin.png" alt="Member 3" width={48} height={48} className="h-12 w-12 rounded-3xl" />
-              <Image src="/members/robert.png" alt="Member 4" width={48} height={48} className="h-12 w-12 rounded-3xl" />
+              <Image src="/members/pik1.jpg" alt="Member 1" width={60} height={60} className="h-12 w-12 rounded-3xl" />
+              <Image src="/members/pik1.jpg" alt="Member 2" width={60} height={60} className="h-12 w-12 rounded-3xl" />
+              <Image src="/members/pik1.jpg" alt="Member 3" width={60} height={60} className="h-12 w-12 rounded-3xl" />
+              <Image src="/members/pik1.jpg" alt="Member 4" width={60} height={60} className="h-12 w-12 rounded-3xl" />
             </div>
           </section>
 
