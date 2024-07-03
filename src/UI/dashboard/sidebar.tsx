@@ -1,8 +1,8 @@
 'use client';
 import Link from 'next/link';
 import { PowerIcon } from '@heroicons/react/24/outline';
-import SRLogo from '../logo/SRLogo';
-import NavLinks from './nav-links';
+import SRLogo from '@/ui/logo/SRLogo';
+import NavLinks from '@/ui/dashboard/nav-links';
 
 
 export default function SideNav() {

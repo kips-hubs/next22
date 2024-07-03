@@ -13,6 +13,7 @@ export default NextAuth({
       },
       async authorize(credentials) {
         if (!credentials) {
+          console.error('No credentials provided');
           throw new Error('No credentials provided');
         }
 
@@ -23,6 +24,7 @@ export default NextAuth({
           const user = (rows as any)[0]; // Casting to any here to handle typing
 
           if (!user) {
+            console.error('No user found');
             throw new Error('No user found');
           }
 
@@ -31,6 +33,7 @@ export default NextAuth({
           if (isMatch) {
             return { id: user.id, name: user.username, email: user.email } as { id: string; name: string; email?: string };
           } else {
+            console.error('Invalid password');
             throw new Error('Invalid password');
           }
         } catch (error) {

@@ -1,17 +1,14 @@
-// app/auth/error/page.tsx
 'use client';
-
-import { useRouter } from 'next/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
 const ErrorPage = () => {
+  const searchParams = useSearchParams();
+  const error = searchParams.get('error');
   const router = useRouter();
-  const queryParams = new URLSearchParams(window.location.search);
-  const error = queryParams.get('error');
 
   useEffect(() => {
     if (!error) {
-      // Redirect to home page or some other page if error is not present
       router.push('/');
     }
   }, [error, router]);
