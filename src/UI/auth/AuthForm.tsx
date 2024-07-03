@@ -2,7 +2,6 @@
 
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { signIn } from 'next-auth/react';
 
 type AuthFormProps = {
     mode: 'login' | 'register';
@@ -29,28 +28,39 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
                 if (res.ok) {
                     await router.push('/auth/signin');
                 } else {
-                    const text = await res.text(); // Use text() instead of json()
+                    const text = await res.text();
                     let errorData;
 
                     try {
-                        errorData = JSON.parse(text); // Try to parse if text is valid JSON
+                        errorData = JSON.parse(text);
                     } catch (err) {
-                        errorData = { message: 'Something went wrong' }; // Fallback error message
+                        errorData = { message: 'Something went wrong' };
                     }
 
                     setError(errorData.message || 'Something went wrong');
                 }
-            } else {
-                const result = await signIn('credentials', {
-                    redirect: false,
-                    username,
-                    password,
+            } 
+            if(mode === 'login') {
+                const res = await fetch('/api/auth/signin', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password }),
                 });
 
-                if (result?.error) {
-                    setError(result.error);
-                } else {
+                if (res.ok) {
                     await router.push('/dashboard');
+                } else {
+                    const text = await res.text();
+                    let errorData;
+
+                    try {
+                        errorData = JSON.parse(text);
+                    } catch (err) {
+                        errorData = { message: 'Something went wrong' };
+                    }
+
+                    setError(errorData.message || 'Something went wrong');
+                    await router.push(`/auth/error?error=${encodeURIComponent(errorData.message || 'Something went wrong')}`);
                 }
             }
         } catch (err) {
@@ -110,7 +120,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
                             type="submit"
                             className="w-full px-4 py-2 font-semibold text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
                         >
-                            {mode === 'register' ? 'register' : 'login'}
+                            {mode === 'register' ? 'Register' : 'Login'}
                         </button>
                     </div>
                 </form>

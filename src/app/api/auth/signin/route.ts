@@ -1,49 +1,39 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import bcrypt from 'bcryptjs';
-import pool from '@/lib/db'; // Adjust the import path if needed
+import { NextResponse } from 'next/server';
+import argon2 from 'argon2';
+import pool from '@/lib/db'; // Adjust the import path as needed
 
-interface SignInRequestBody {
-  username: string;
-  password: string;
-}
+export async function POST(request: Request) {
+    try {
+        const { username, password } = await request.json();
 
-interface ErrorResponse {
-  error: string;
-}
+        if (!username || !password) {
+            return NextResponse.json({ message: 'Username and password are required' }, { status: 400 });
+        }
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<ErrorResponse | { message: string }>
-) {
-  if (req.method !== 'POST') {
-    return res.status(405).json({ error: 'Method not allowed' });
-  }
+        // Query the database to find the user
+        const [rows] = await pool.query('SELECT * FROM users WHERE username = ?', [username]);
+        const user = (rows as any)[0]; // Casting to any here to handle typing
+        console.log('User Found:', user); // Log user details
 
-  const { username, password }: SignInRequestBody = req.body;
+        if (!user) {
+            return NextResponse.json({ message: 'Invalid username or password' }, { status: 401 });
+        }
 
-  if (!username || !password) {
-    return res.status(400).json({ error: 'Username and password are required' });
-  }
+        // Log the provided password and the stored hash
+        console.log('Provided Password:', password);
+        console.log('Stored Hashed Password:', user.password);
 
-  try {
-    // Query the database to find the user
-    const [rows] = await pool.query('SELECT * FROM users WHERE username = ?', [username]);
-    const user = (rows as any)[0]; // Casting to any here to handle typing
+        // Compare passwords
+        const isMatch = await argon2.verify(user.password, password);
+        console.log('Password Match:', isMatch); // Log password match status
 
-    if (!user) {
-      return res.status(401).json({ error: 'Invalid username or password' });
+        if (isMatch) {
+            return NextResponse.json({ message: 'Sign-in successful' }, { status: 200 });
+        } else {
+            return NextResponse.json({ message: 'Invalid password' }, { status: 401 });
+        }
+    } catch (error) {
+        console.error('Error during sign-in:', error);
+        return NextResponse.json({ message: 'Internal server error' }, { status: 500 });
     }
-
-    // Compare passwords
-    const isMatch = await bcrypt.compare(password, user.password);
-
-    if (isMatch) {
-      return res.status(200).json({ message: 'Sign-in successful' });
-    } else {
-      return res.status(401).json({ error: 'Invalid username or password' });
-    }
-  } catch (error) {
-    console.error('Error during sign-in:', error);
-    return res.status(500).json({ error: 'Internal server error' });
-  }
 }
