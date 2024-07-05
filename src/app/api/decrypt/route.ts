@@ -86,15 +86,18 @@ export async function POST(request: NextRequest) {
         .on('error', reject);
     });
 
-    // Clean up the original file after decryption
+    // Ensure streams are properly closed
     input.close();
     output.close();
 
-    fs.unlink(encryptedFilePath, (err) => {
-      if (err) {
-        console.error('Error deleting file:', err);
-      }
-    });
+    // Clean up the original encrypted file after ensuring the streams are closed
+    setTimeout(() => {
+      fs.unlink(encryptedFilePath, (err) => {
+        if (err) {
+          console.error('Error deleting file:', err);
+        }
+      });
+    }, 1000);
 
     return NextResponse.json({ message: 'File decrypted and saved', path: decryptedFilePath }, { status: 200 });
   } catch (error) {
