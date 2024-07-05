@@ -4,12 +4,12 @@ import path from 'path';
 import crypto from 'crypto';
 import { Readable } from 'stream';
 
-const UPLOAD_DIR = path.join(process.cwd(), 'uploads');
-const DECRYPTED_DIR = path.join(process.cwd(), 'decrypted'); // Ensure this directory exists
+const ENCRYPTED_DIR = path.join(process.cwd(), 'encrypted');
+const DECRYPTED_DIR = path.join(process.cwd(), 'decrypted');
 
 // Ensure the directories exist
-if (!fs.existsSync(UPLOAD_DIR)) {
-  fs.mkdirSync(UPLOAD_DIR);
+if (!fs.existsSync(ENCRYPTED_DIR)) {
+  fs.mkdirSync(ENCRYPTED_DIR);
 }
 if (!fs.existsSync(DECRYPTED_DIR)) {
   fs.mkdirSync(DECRYPTED_DIR);
@@ -51,28 +51,33 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No file uploaded' }, { status: 400 });
     }
 
-    const filePath = path.join(UPLOAD_DIR, file.name);
-    const originalFileName = file.name.replace('.enc', ''); // Restore original file name without '.enc'
-    const decryptedFilePath = path.join(DECRYPTED_DIR, originalFileName);
+    const encryptedFilePath = path.join(ENCRYPTED_DIR, file.name);
+    const decryptedFilePath = path.join(DECRYPTED_DIR, file.name);
 
     // Convert the Blob to a Node.js readable stream
     const readableStream = webStreamToNodeStream(file.stream());
 
     // Save the uploaded file
-    const fileStream = fs.createWriteStream(filePath);
+    const fileStream = fs.createWriteStream(encryptedFilePath);
     await new Promise<void>((resolve, reject) => {
       readableStream.pipe(fileStream)
         .on('finish', resolve)
         .on('error', reject);
     });
 
-    // Decrypt the file
+    // Read the IV from the start of the file
+    const iv = Buffer.alloc(16);
+    const fd = fs.openSync(encryptedFilePath, 'r');
+    fs.readSync(fd, iv, 0, 16, 0);
+    fs.closeSync(fd);
+
+    // Create decipher instance
     const algorithm = 'aes-256-cbc';
     const key = crypto.createHash('sha256').update(password).digest('base64').substr(0, 32);
-    const iv = fs.readFileSync(filePath).slice(0, 16);
     const decipher = crypto.createDecipheriv(algorithm, Buffer.from(key), iv);
 
-    const input = fs.createReadStream(filePath, { start: 16 }); // Skip the IV
+    // Decrypt the file
+    const input = fs.createReadStream(encryptedFilePath, { start: 16 });
     const output = fs.createWriteStream(decryptedFilePath);
 
     await new Promise<void>((resolve, reject) => {
@@ -82,7 +87,10 @@ export async function POST(request: NextRequest) {
     });
 
     // Clean up the original file after decryption
-    fs.unlink(filePath, (err) => {
+    input.close();
+    output.close();
+
+    fs.unlink(encryptedFilePath, (err) => {
       if (err) {
         console.error('Error deleting file:', err);
       }

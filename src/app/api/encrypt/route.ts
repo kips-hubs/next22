@@ -5,10 +5,14 @@ import crypto from 'crypto';
 import { Readable } from 'stream';
 
 const UPLOAD_DIR = path.join(process.cwd(), 'uploads');
+const ENCRYPTED_DIR = path.join(process.cwd(), 'encrypted');
 
-// Ensure the upload directory exists
+// Ensure the directories exist
 if (!fs.existsSync(UPLOAD_DIR)) {
   fs.mkdirSync(UPLOAD_DIR);
+}
+if (!fs.existsSync(ENCRYPTED_DIR)) {
+  fs.mkdirSync(ENCRYPTED_DIR);
 }
 
 // Function to convert Web Stream to Node.js Readable Stream
@@ -48,7 +52,7 @@ export async function POST(request: NextRequest) {
     }
 
     const filePath = path.join(UPLOAD_DIR, file.name);
-    const encryptedFilePath = path.join(UPLOAD_DIR, `${path.parse(file.name).name}.enc`);
+    const encryptedFilePath = path.join(ENCRYPTED_DIR, file.name);
 
     // Convert the Blob to a Node.js readable stream
     const readableStream = webStreamToNodeStream(file.stream());
@@ -69,6 +73,9 @@ export async function POST(request: NextRequest) {
 
     const input = fs.createReadStream(filePath);
     const output = fs.createWriteStream(encryptedFilePath);
+
+    // Write the IV to the output file first
+    output.write(iv);
 
     input.pipe(cipher).pipe(output);
 
