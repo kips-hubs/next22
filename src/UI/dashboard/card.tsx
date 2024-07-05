@@ -1,26 +1,33 @@
-import React from 'react';
+import { generateData } from '@/lib/dataGenerator';
+import CardEnc from '@/ui/dashboard/overview';
+import { CardsSkeleton } from '@/ui/skeletons';
+import React, { useState, useEffect } from 'react';
 
-interface CardProps {
-  title: string;
-  description: string;
-  date: string;
-}
+const Dashboard: React.FC = () => {
+  const [data, setData] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-const Card: React.FC<CardProps> = ({ title, description, date }) => {
+  useEffect(() => {
+    // Simulate a data fetching process
+    setTimeout(() => {
+      const fetchedData = generateData(6); // Generate 6 items
+      setData(fetchedData);
+      setLoading(false);
+    }, 2000); // Simulate a 2-second loading time
+  }, []);
+
   return (
-    <div className="relative overflow-hidden rounded-xl bg-white p-4 shadow-sm">
-      <div className="mb-2 flex justify-between items-center">
-        <h2 className="text-xl font-semibold">{title}</h2>
-        <span className="text-sm text-gray-500">{date}</span>
-      </div>
-      <p className="text-gray-700">{description}</p>
-      <div className="flex mt-4 space-x-4">
-        <button className="px-4 py-2 bg-blue-500 text-white rounded-md">Read more</button>
-        <button className="px-4 py-2 bg-green-500 text-white rounded-md">Hide</button>
-        {/* <button className="px-4 py-2 bg-yellow-500 text-white rounded-md">Decrypt</button> */}
-      </div>
+    <div className="container mx-auto p-6">
+      <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
+      {loading ? (
+        <CardsSkeleton />
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <CardEnc algorithms={data} />
+        </div>
+      )}
     </div>
   );
 };
 
-export default Card;
+export default Dashboard;
