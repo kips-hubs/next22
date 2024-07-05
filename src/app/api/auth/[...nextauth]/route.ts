@@ -1,7 +1,8 @@
+import { verify } from 'argon2';
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import pool from '@/lib/db'; // Adjust the import path if needed
-import bcrypt from 'bcryptjs';
+
 
 export default NextAuth({
   providers: [
@@ -28,7 +29,7 @@ export default NextAuth({
             throw new Error('No user found');
           }
 
-          const isMatch = await bcrypt.compare(password, user.password);
+          const isMatch = await verify(password, user.password);
 
           if (isMatch) {
             return { id: user.id, name: user.username, email: user.email } as { id: string; name: string; email?: string };

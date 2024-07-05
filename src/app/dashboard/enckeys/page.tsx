@@ -1,9 +1,13 @@
-export default function EKeys(){
-    return (
-        <div>
-            <p>
-                This is the Eks
-            </p>
-        </div>
-    );
-}
+// pages/encrypt.tsx
+import React from 'react';
+import FileUpload from '@/ui/dashboard/EncFile';
+
+const EncryptPage: React.FC = () => {
+  return (
+    <div>
+      <FileUpload />
+    </div>
+  );
+};
+
+export default EncryptPage;

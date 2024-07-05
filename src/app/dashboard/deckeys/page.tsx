@@ -1,9 +1,13 @@
-export default function DKs(){
-    return (
-        <div>
-            <p>
-                This is the Dec Keys page
-            </p>
-        </div>
-    );
-}
+// pages/decrypt.tsx
+import React from 'react';
+import FileDecrypt from '@/ui/dashboard/fileDecrypt';
+
+const DecryptPage: React.FC = () => {
+  return (
+    <div>
+      <FileDecrypt />
+    </div>
+  );
+};
+
+export default DecryptPage;

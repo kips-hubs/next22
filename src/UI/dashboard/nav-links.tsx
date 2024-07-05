@@ -18,8 +18,8 @@ const links = [
     href: '/dashboard/myfiles',
     icon: FolderIcon,
   },
-  { name: 'Encryption Keys', href: '/dashboard/enckeys', icon: LockClosedIcon },
-  { name: 'Decryption Keys', href: '/dashboard/deckeys', icon: KeyIcon },
+  { name: 'Encrypt File', href: '/dashboard/enckeys', icon: LockClosedIcon },
+  { name: 'Decrypt File', href: '/dashboard/deckeys', icon: KeyIcon },
   { name: 'Profile', href: '/dashboard/profile', icon: UserIcon }
 ];
 
