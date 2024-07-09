@@ -7,7 +7,7 @@ interface FileEntry {
 }
 
 interface FilesData {
-  uploads: FileEntry[];
+  // uploads: FileEntry[];
   encrypted: FileEntry[];
   decrypted: FileEntry[];
 }
@@ -38,7 +38,7 @@ const FileTable: React.FC = () => {
     <div className="container mx-auto p-6">
       <h1 className="text-2xl font-bold mb-4">Files Overview</h1>
       <div className="flex flex-col w-full gap-2 mt-3">
-        <FileCategory title="Uploads" files={files?.uploads} />
+        {/* <FileCategory title="Uploads" files={files?.uploads} /> */}
         <FileCategory title="Encrypted" files={files?.encrypted} />
         <FileCategory title="Decrypted" files={files?.decrypted} />
       </div>

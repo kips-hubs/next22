@@ -39,7 +39,7 @@ export default function Page() {
 
             <div className="flex space-x-4 mb-8">
               <Link className="bg-black text-white py-2 px-6 rounded" href={'/auth/register'}>Sign Up</Link>
-              <Link className="bg-gray-200 text-black py-2 px-6 rounded" href={'/dashboard'}>Learn More</Link>
+              <Link className="bg-gray-200 text-black py-2 px-6 rounded" href={''}>Learn More</Link>
             </div>
 
             <div className="flex flex-wrap justify-center items-center space-x-6">
